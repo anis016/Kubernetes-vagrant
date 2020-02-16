@@ -1,0 +1,50 @@
+---
+
+- name: "Set the hostname"
+  hosts: 'master,workers'
+  gather_facts: no
+  tasks:
+    - hostname:
+        name: "{{ inventory_hostname }}"
+
+- name: "Configure '/etc/hosts' file"
+  hosts: 'master,workers'
+  gather_facts: no
+  roles:
+    - configure-hosts
+
+- name: "Configure EPEL Repository for python-pip"
+  hosts: 'master,workers'
+  roles:
+    - configure-epel
+
+- name: "Setup necessary packages"
+  hosts: 'master,workers'
+  roles:
+    - setup-packages
+
+- name: "Configure bridge netfilter for iptables"
+  hosts: 'master,workers'
+  roles:
+    - configure-bridge-netfilter
+
+- name: "Disable firewall in all the hosts"
+  hosts: 'master,workers'
+  roles:
+    - disable-firewall
+
+- name: "Disable selinux in all the hosts"
+  hosts: 'master,workers'
+  roles:
+    - disable-selinux
+
+- name: "Disable swap in all the hosts"
+  hosts: 'master,workers'
+  gather_facts: no
+  roles:
+    - disable-swap
+
+- name: "Setup docker in all the hosts"
+  hosts: 'master,workers'
+  roles:
+    - setup-docker

@@ -1,0 +1,5 @@
+---
+
+selinux_packages: ['libselinux-python', 'selinux-policy']
+selinux_state: 'disabled'
+selinux_conf_path: '/etc/selinux/config'
