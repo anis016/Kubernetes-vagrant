@@ -1,0 +1,11 @@
+---
+
+- name: "Configure kubernets in all the hosts"
+  hosts: 'master,workers'
+  roles:
+    - kubernetes-configure
+
+- name: "Setup kubernets in all the hosts"
+  hosts: 'master,workers'
+  roles:
+    - kubernetes-setup
