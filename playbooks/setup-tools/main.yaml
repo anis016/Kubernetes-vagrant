@@ -1,0 +1,6 @@
+---
+
+- name: "Setup necessary tools"
+  hosts: 'master,workers'
+  roles:
+    - setup-tools

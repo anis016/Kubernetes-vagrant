@@ -1,0 +1,11 @@
+---
+
+- name: "Add Kubernetes yum repository"
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes yum repository
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    gpgcheck: yes
+    enabled: yes
+  when: (ansible_distribution|lower == "redhat") or (ansible_distribution|lower == "centos")

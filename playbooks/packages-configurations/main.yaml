@@ -1,0 +1,12 @@
+---
+
+- name: "Configure EPEL Repository for python-pip"
+  hosts: 'master,workers'
+  roles:
+    - configure-epel
+
+
+- name: "Configure bridge netfilter for iptables"
+  hosts: 'master,workers'
+  roles:
+    - configure-bridge-netfilter

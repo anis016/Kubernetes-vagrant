@@ -1,0 +1,15 @@
+---
+
+- name: "Set the hostname"
+  hosts: 'master,workers'
+  gather_facts: no
+  tasks:
+    - hostname:
+        name: "{{ inventory_hostname }}"
+
+
+- name: "Configure '/etc/hosts' file"
+  hosts: 'master,workers'
+  gather_facts: no
+  roles:
+    - configure-hosts
