@@ -7,10 +7,3 @@
     update_cache: 'yes'
     lock_timeout: 180
     disable_excludes: 'kubernetes'
-
-
-- name: "Restart and enable Kubelet service"
-  systemd:
-    name: kubelet
-    state: restarted
-    enabled: yes

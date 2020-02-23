@@ -1,11 +1,11 @@
 ---
 
-- name: "Set the hostname"
+- name: "Set the hostnames of the hosts"
   hostname:
     name: "{{ inventory_hostname }}"
 
 
-- name: "Generate /etc/hosts file"
+- name: "Generate /etc/hosts file for the hosts"
   template:
     src: hosts.j2
     dest: /etc/hosts

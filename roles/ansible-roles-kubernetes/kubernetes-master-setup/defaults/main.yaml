@@ -1,0 +1,9 @@
+---
+
+kubernetes_master_ignore_preflight_errors: "all"
+kubernetes_master_pod_network:
+  cni: 'calico'
+  cidr: '192.168.0.0/16'
+kubernetes_master_calico_manifest_file: "https://docs.projectcalico.org/v3.11/manifests/calico.yaml"
+kubernetes_master_allow_pods_on_master: true
+kubernetes_master_enable_web_ui: true

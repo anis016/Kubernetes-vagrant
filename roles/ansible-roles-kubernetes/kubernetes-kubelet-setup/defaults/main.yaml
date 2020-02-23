@@ -1,0 +1,4 @@
+---
+
+kubernetes_kubelet_environment_file_path: /etc/sysconfig/kubelet
+kubernetes_kubelet_extra_args: "--cgroup-driver=systemd"

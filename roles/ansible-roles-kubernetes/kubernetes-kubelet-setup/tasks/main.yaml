@@ -1,0 +1,27 @@
+---
+
+- name: "Set facts for KUBELET_EXTRA_ARGS"
+  set_fact:
+    kubelet_args_path: '{{ kubernetes_kubelet_environment_file_path }}'
+    kubelet_args_line: "{{ 'KUBELET_EXTRA_ARGS=' + kubernetes_kubelet_extra_args }}"
+    kubelet_args_regexp: '^KUBELET_EXTRA_ARGS='
+
+
+- name: "Configure KUBELET_EXTRA_ARGS"
+  lineinfile:
+    path: '{{ kubelet_args_path }}'
+    line: '{{ kubelet_args_line }}'
+    regexp: '{{ kubelet_args_regexp }}'
+    state: present
+
+
+- name: "Force systemd to reread configs"
+  systemd:
+    daemon_reload: yes
+
+
+- name: "Reload kubelet"
+  systemd:
+    name: kubelet
+    state: restarted
+    enabled: yes
