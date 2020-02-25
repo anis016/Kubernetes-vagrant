@@ -3,7 +3,9 @@
 - name: "Install SELinux packages"
   yum:
     name: "{{ selinux_packages }}"
-    state: installed
+    state: 'present'
+    update_cache: 'yes'
+    lock_timeout: 180
 
 - name: "Set selinux - {{ selinux_state }}"
   selinux:

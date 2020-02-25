@@ -1,0 +1,53 @@
+---
+
+- hosts: kslave1.fritz.box
+  gather_facts: no
+  tasks:
+    - lineinfile:
+        path: "/root/something1.txt"
+        regexp: "change_me=(.*)$"
+        line: "#change_me=true"
+
+#- hosts: master
+#  vars:
+#    java_home: /usr/lib/jvm
+#    java_openjdk_major_version: 'java-1.8.0-openjdk'
+#    java_openjdk_minor_version: '1.8.0.232.b09-0.el7_7'
+#    java_openjdk_pkgs:
+#      - '{{ java_openjdk_major_version }}-{{ java_openjdk_minor_version }}.x86_64'
+#      - '{{ java_openjdk_major_version }}-devel-{{ java_openjdk_minor_version }}.x86_64'
+#      - '{{ java_openjdk_major_version }}-headless-{{ java_openjdk_minor_version }}.x86_64'
+#    allow_downgrade: yes
+#    state: present
+#    validate_certs: yes
+#    update_only: no
+#    update_cache: yes
+#    disable_gpg_check: no
+#    security: yes
+#  tasks:
+#    - name: Install Java OpenJDK - 1.8.0
+#      yum:
+#        name: "{{ java_openjdk_pkgs }}"
+#        state: "{{ state }}"
+#        validate_certs: "{{ validate_certs }}"
+#        update_cache: "{{ update_cache }}"
+#        update_only: "{{ update_only }}"
+#        disable_gpg_check: "{{ disable_gpg_check }}"
+#        security: "{{ security }}"
+#        allow_downgrade: "{{ allow_downgrade }}"
+#
+#    - name: Add JAVA_HOME and JRE_HOME globally in /etc/environment
+#      blockinfile:
+#        path: /etc/environment
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK JAVA"
+#        block: |
+#          export JAVA_HOME={{ java_home }}/jre-1.8.0-openjdk
+#          export JRE_HOME={{ java_home }}/jre
+#        state: present
+#
+#    - name: check java version
+#      shell: java -version
+#      register: java__version
+#
+#    - debug:
+#        var: java__version.stderr_lines

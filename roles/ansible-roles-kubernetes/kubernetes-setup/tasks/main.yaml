@@ -3,7 +3,14 @@
 - name: "Install packages -- {{ kubernetes_packages | join(', ') }}"
   yum:
     name: '{{ kubernetes_packages }}'
-    state: 'latest'
+    state: 'present'
     update_cache: 'yes'
     lock_timeout: 180
-    disable_excludes: 'kubernetes'
+  notify: restart kubelet
+
+
+- name: "Ensure kubelet is started and enabled at boot"
+  service:
+    name: kubelet
+    state: started
+    enabled: true

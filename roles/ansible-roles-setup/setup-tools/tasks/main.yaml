@@ -3,7 +3,7 @@
 - name: "Install packages -- {{ yum_packages | join(', ') }}"
   yum:
     name: '{{ yum_packages }}'
-    state: 'latest'
+    state: 'present'
     update_cache: 'yes'
     lock_timeout: 180
 

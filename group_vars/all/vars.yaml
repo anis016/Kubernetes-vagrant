@@ -1,0 +1,5 @@
+---
+
+kubernetes_version: '1.16'
+kubernetes_version_rhel_package: '1.16.4'
+kubernetes_version_kubeadm: 'stable-{{ kubernetes_version }}'

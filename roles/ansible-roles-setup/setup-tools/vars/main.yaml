@@ -1,4 +1,10 @@
 ---
 
-# packages to be installed
-yum_packages: ['rsync', 'python-pip', 'vim', 'nmap', 'unzip', 'net-tools', 'iptables-services']
+yum_packages:
+  - 'rsync'
+  - 'python-pip'
+  - 'vim'
+  - 'nmap'
+  - 'unzip'
+  - 'net-tools'
+  - 'iptables-services'

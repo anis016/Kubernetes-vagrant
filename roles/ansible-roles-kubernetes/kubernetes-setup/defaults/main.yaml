@@ -1,3 +1,7 @@
 ---
 
-kubernetes_packages: ['kubeadm', 'kubectl', 'kubelet']
+kubernetes_packages:
+  - 'kubelet-{{ kubernetes_version_rhel_package }}-0'
+  - 'kubectl-{{ kubernetes_version_rhel_package }}-0'
+  - 'kubeadm-{{ kubernetes_version_rhel_package }}-0'
+  - 'kubernetes-cni'

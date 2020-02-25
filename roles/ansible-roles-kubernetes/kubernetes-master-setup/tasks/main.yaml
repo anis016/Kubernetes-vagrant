@@ -11,6 +11,7 @@
     kubeadm init
     --pod-network-cidr={{ kubernetes_master_pod_network.cidr }}
     --apiserver-advertise-address={{ ansible_default_ipv4.address }}
+    --kubernetes-version {{ kubernetes_version_kubeadm }}
     --ignore-preflight-errors={{ kubernetes_master_ignore_preflight_errors }}
   register: kubeadmin_init
   failed_when: false
