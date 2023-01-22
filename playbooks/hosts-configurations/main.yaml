@@ -1,7 +1,0 @@
----
-
-- name: "Configure hostnames and hosts"
-  hosts: 'master,workers'
-  gather_facts: no
-  roles:
-    - configure-hosts

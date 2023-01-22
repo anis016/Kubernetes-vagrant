@@ -1,0 +1,32 @@
+---
+- name: Ensure rpm key '{{ containerd__docker_yum_gpg_key }}' is present 
+  rpm_key:
+    key: "{{ containerd__docker_yum_gpg_key }}"
+    state: present
+    validate_certs: yes
+
+- name: Ensure repository '{{ containerd__docker_yum_repo_url }}' is present 
+  yum_repository:
+    name: docker-ce
+    description: Docker YUM repo
+    baseurl: "{{ containerd__docker_yum_repo_url }}"
+    state: present
+    enabled: true
+    gpgcheck: true
+    gpgkey: "{{ containerd__docker_yum_gpg_key }}"
+
+- name: Ensure package '{{ containerd__packages | join(", ") }}' is present 
+  yum:
+    name: "{{ containerd__packages }}"
+    state: present
+    update_cache: yes
+
+- name: Clean the yum metadata
+  shell: yum clean metadata
+  args:
+    warn: no
+
+- name: Clean the yum cache
+  shell: yum clean all
+  args:
+    warn: no

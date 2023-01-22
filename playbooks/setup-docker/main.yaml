@@ -1,6 +1,0 @@
----
-
-- name: "Setup docker in all the hosts"
-  hosts: 'master,workers'
-  roles:
-    - setup-docker

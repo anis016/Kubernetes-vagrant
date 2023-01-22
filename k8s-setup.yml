@@ -1,0 +1,6 @@
+---
+- name: Configure Kubernetes
+  hosts: all
+  roles:
+    - k8s
+  tags: k8s

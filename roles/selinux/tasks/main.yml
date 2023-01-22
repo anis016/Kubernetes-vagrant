@@ -1,0 +1,17 @@
+---
+- name: Disable SELinux
+  selinux:
+    state: "{{ selinux__state }}"
+  register: selinux__status
+
+- name: Restart to set the state - "{{ selinux__state }}"
+  shell: sudo /sbin/shutdown -r now
+  async: 10
+  poll: 0
+  when: selinux__status.reboot_required
+
+- name: Wait for the hosts to be online
+  wait_for_connection:
+    delay: 5
+    timeout: 300
+  when: selinux__status.reboot_required

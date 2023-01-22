@@ -1,0 +1,12 @@
+---
+# Package
+containerd__packages:
+  - containerd.io
+
+# Write a default containerd config.toml file
+containerd__config_default_write: true
+
+# Repo URL
+containerd__docker_repo_url: https://download.docker.com/linux
+containerd__docker_yum_repo_url: "{{ containerd__docker_repo_url }}/{{ (ansible_distribution == 'Fedora') | ternary('fedora','centos') }}/$releasever/$basearch/stable"
+containerd__docker_yum_gpg_key: "{{ containerd__docker_repo_url }}/centos/gpg"

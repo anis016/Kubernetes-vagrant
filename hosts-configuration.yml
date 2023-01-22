@@ -1,0 +1,6 @@
+---
+- name: Configure '/etc/hosts' file
+  hosts: all
+  roles:
+    - hosts-config
+  tags: hosts

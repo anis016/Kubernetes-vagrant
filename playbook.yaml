@@ -1,8 +1,0 @@
----
-
-- import_playbook: './playbooks/hosts-configurations/main.yaml'
-- import_playbook: './playbooks/packages-configurations/main.yaml'
-- import_playbook: './playbooks/disable-configurations/main.yaml'
-- import_playbook: './playbooks/setup-tools/main.yaml'
-- import_playbook: './playbooks/setup-docker/main.yaml'
-- import_playbook: './playbooks/setup-kubernetes/main.yaml'

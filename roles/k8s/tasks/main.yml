@@ -1,0 +1,10 @@
+---
+- name: Include task for k8s setup in '{{ ansible_os_family }}'
+  include_tasks: k8s-rhel.yml
+
+- name: Enable and start the 'kubelet' service
+  service:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes
+    enabled: yes

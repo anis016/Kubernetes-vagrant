@@ -1,0 +1,42 @@
+---
+- name: Creating a configuration file for 'containerd'
+  file:
+    path: "/etc/modules-load.d/containerd.conf"
+    state: "touch"
+
+- name: Set pre-requisites for 'containerd'
+  blockinfile:
+    path: /etc/modules-load.d/containerd.conf
+    block: |
+      overlay
+      br_netfilter
+
+- name: Load required modules for 'containerd'
+  shell: |
+    sudo modprobe overlay
+    sudo modprobe br_netfilter
+
+- name: Include task for containerd setup in '{{ ansible_os_family }}'
+  include_tasks: containerd-rhel.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Remove '/etc/containerd/config.toml'
+  file:
+    path: /etc/containerd/config.toml
+    state: absent
+
+- name: Ensure 'containerd' is started and enabled at boot
+  service:
+    name: containerd
+    state: started
+    enabled: yes
+
+- name: Ensure 'containerd' is restarted immediately if necessary
+  meta: flush_handlers
+
+- name: Set the 'containerd' daemon permission
+  file:
+    path: /run/containerd/containerd.sock
+    owner: root
+    group: root
+    mode: "0666"

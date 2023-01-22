@@ -1,0 +1,26 @@
+---
+- name: Ensure repository for Kubernets is present 
+  yum_repository:
+    name: "{{ k8s__repo_name }}"
+    description: Kubernetes
+    baseurl: "{{ k8s__yum_repo_url }}"
+    state: present
+    enabled: true
+    gpgcheck: true
+    gpgkey: "{{ k8s__yum_gpg_key }}"
+
+- name: Ensure packages '{{ k8s__packages | join(", ") }}' are present 
+  yum:
+    name: "{{ k8s__packages }}"
+    state: present
+    update_cache: yes
+
+- name: Clean the yum metadata
+  shell: yum clean metadata
+  args:
+    warn: no
+
+- name: Clean the yum cache
+  shell: yum clean all
+  args:
+    warn: no

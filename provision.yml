@@ -1,0 +1,21 @@
+---
+- name: Configure SELinux
+  import_playbook: "./selinux.yml"
+
+- name: Configure '/etc/hosts'
+  import_playbook: "./hosts-configuration.yml"
+
+- name: Configure Swap
+  import_playbook: "./swap.yml"
+
+- name: Configure Firewall
+  import_playbook: "./firewalld.yml"
+
+- name: Configure Sysctl settings for the Kubernetes networking
+  import_playbook: "./k8s-sysctl.yml"
+
+- name: Configure Containerd
+  import_playbook: "./containerd.yml"
+
+- name: Configure Kubernetes
+  import_playbook: "./k8s-setup.yml"

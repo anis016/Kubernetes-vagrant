@@ -1,0 +1,21 @@
+---
+- name: Create the sysctl settings for the Kubernetes networking
+  file:
+    path: "{{ sysctl_k8s__path }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: touch
+
+- name: Configure Kernel settings for the Kubernetes
+  blockinfile:
+    path: "{{ sysctl_k8s__path }}"
+    block: |
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.bridge.bridge-nf-call-iptables = 1
+      net.ipv4.ip_forward = 1
+  register: sysctl_k8s__status
+
+- name: Make the settings permanent
+  shell: sysctl --system
+  when: sysctl_k8s__status.changed

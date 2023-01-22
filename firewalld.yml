@@ -1,0 +1,6 @@
+---
+- name: Configure Firewall
+  hosts: all
+  roles:
+    - firewalld
+  tags: firewalld

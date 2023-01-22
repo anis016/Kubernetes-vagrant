@@ -1,0 +1,6 @@
+---
+- name: Configure Containerd
+  hosts: all
+  roles:
+    - containerd
+  tags: containerd

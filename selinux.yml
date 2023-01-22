@@ -1,0 +1,6 @@
+---
+- name: Configure SELinux
+  hosts: all
+  roles:
+    - selinux
+  tags: selinux

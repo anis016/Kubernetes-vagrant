@@ -1,0 +1,2 @@
+---
+sysctl_k8s__path: "/etc/sysctl.d/kubernetes.conf"

@@ -1,8 +1,0 @@
----
-
-- name: "Disable firewall daemon"
-  systemd:
-    name: firewalld
-    state: stopped
-    enabled: no
-    masked: yes

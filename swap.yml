@@ -1,0 +1,6 @@
+---
+- name: Configure Swap
+  hosts: all
+  roles:
+    - swap
+  tags: swap

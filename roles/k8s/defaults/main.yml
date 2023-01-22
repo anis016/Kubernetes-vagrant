@@ -1,0 +1,9 @@
+---
+k8s__repo_url: "https://packages.cloud.google.com/yum"
+k8s__repo_name: "kubernetes"
+k8s__yum_repo_url: '{{ k8s__repo_url }}/repos/kubernetes-el7-x86_64'
+k8s__yum_gpg_key: '{{ k8s__repo_url }}/doc/yum-key.gpg {{ k8s__repo_url }}/doc/rpm-package-key.gpg'
+k8s__packages:
+  - kubeadm-1.24.0-0
+  - kubelet-1.24.0-0
+  - kubectl-1.24.0-0

@@ -1,0 +1,6 @@
+---
+- name: Configure Sysctl for the Kubernetes
+  hosts: all
+  roles:
+    - k8s-sysctl
+  tags: k8s-sysctl
