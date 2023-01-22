@@ -43,20 +43,25 @@ $ ansible-playbook provision.yml
 
 ### On The Master Machine
 
-Restart the `containerd`
+Check that the `containerd` is running
+
+```sh
+$ vagrant ssh master1
+$ systemctl status containerd
+```
 
 Initialize the machine that will run the control plane components which includes etcd (the cluster database) and the API Server. Pull container images:
 
 ```sh
 $ sudo kubeadm config images pull
 
-[config/images] Pulled registry.k8s.io/kube-apiserver:v1.25.0
-[config/images] Pulled registry.k8s.io/kube-controller-manager:v1.25.0
-[config/images] Pulled registry.k8s.io/kube-scheduler:v1.25.0
-[config/images] Pulled registry.k8s.io/kube-proxy:v1.25.0
-[config/images] Pulled registry.k8s.io/pause:3.8
-[config/images] Pulled registry.k8s.io/etcd:3.5.4-0
-[config/images] Pulled registry.k8s.io/coredns/coredns:v1.9.3
+[config/images] Pulled k8s.gcr.io/kube-apiserver:v1.24.10
+[config/images] Pulled k8s.gcr.io/kube-controller-manager:v1.24.10
+[config/images] Pulled k8s.gcr.io/kube-scheduler:v1.24.10
+[config/images] Pulled k8s.gcr.io/kube-proxy:v1.24.10
+[config/images] Pulled k8s.gcr.io/pause:3.7
+[config/images] Pulled k8s.gcr.io/etcd:3.5.3-0
+[config/images] Pulled k8s.gcr.io/coredns/coredns:v1.8.6
 ```
 
 Bootstrap the cluster
@@ -118,6 +123,12 @@ Deploy Calico network and wait until each pod has the `STATUS` of `Running`
 $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/tigera-operator.yaml
 $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/custom-resources.yaml
 $ watch kubectl get pods -n calico-system
+
+NAME                                       READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-5b8957ccd7-tbpsg   1/1     Running   0          3m57s
+calico-node-mczck                          1/1     Running   0          3m57s
+calico-typha-849b776856-2cqwm              1/1     Running   0          3m57s
+csi-node-driver-jc5z7                      2/2     Running   0          3m5s
 ```
 
 Confirm that all of the pods are running
@@ -161,7 +172,7 @@ Get the cluster join command to join the worker nodes
 ```sh
 $ kubeadm token create --print-join-command
 
-kubeadm join 192.168.56.51:6443 --token 3bnf1c.91vljs1sofy1knsr --discovery-token-ca-cert-hash sha256:1fe4cb0fcb0c8fd7cfeade363d5bd4eda1e6d0970facd7277142029535b90aef 
+kubeadm join 192.168.56.51:6443 --token 04jy8y.xzzcznujurjt5iuj --discovery-token-ca-cert-hash sha256:1951d63890a64d5c91f64b732f379467d212d96c207a3ebc500122e0c389f2d4
 ```
 
 ### On The Worker Machines
@@ -169,35 +180,28 @@ kubeadm join 192.168.56.51:6443 --token 3bnf1c.91vljs1sofy1knsr --discovery-toke
 Join the cluster. Use the output from `kubeadm token create --print-join-command` command in the `Master` step from the master server and run here.
 
 ```sh
-$ sudo kubeadm join 192.168.56.51:6443 --token 3bnf1c.91vljs1sofy1knsr --discovery-token-ca-cert-hash sha256:1fe4cb0fcb0c8fd7cfeade363d5bd4eda1e6d0970facd7277142029535b90aef
+$ vagrant ssh kworker1
+$ sudo kubeadm join 192.168.56.51:6443 --token 04jy8y.xzzcznujurjt5iuj --discovery-token-ca-cert-hash sha256:1951d63890a64d5c91f64b732f379467d212d96c207a3ebc500122e0c389f2d4
 ```
+
+### Verify the cluster (On The Master Machine)
 
 Run `kubectl get nodes` on the control-plane (Master) to see this node joined to the cluster
 
 ```sh
 [vagrant@master1 ~]$ kubectl get nodes
 
-NAME                  STATUS   ROLES           AGE    VERSION
-master1.example.com   Ready    control-plane   19m    v1.25.0
-worker1.example.com   Ready    <none>          119s   v1.25.0
+NAME                   STATUS   ROLES           AGE     VERSION
+kmaster1.example.com   Ready    control-plane   33m     v1.24.0
+kworker1.example.com   Ready    <none>          3m41s   v1.24.0
 ```
-
-### Verify the cluster (On The Master Machine)
-
-Get Nodes status
-
-```sh
-$ kubectl get nodes
-
-NAME                  STATUS   ROLES           AGE    VERSION
-master1.example.com   Ready    control-plane   26m    v1.25.0
-worker1.example.com   Ready    <none>          9m2s   v1.25.0
 
 $ kubectl get nodes -o wide
 
-NAME                  STATUS   ROLES           AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                KERNEL-VERSION                CONTAINER-RUNTIME
-master1.example.com   Ready    control-plane   27m     v1.25.0   192.168.56.51   <none>        CentOS Linux 7 (Core)   3.10.0-1160.76.1.el7.x86_64   containerd://1.6.8
-worker1.example.com   Ready    <none>          9m18s   v1.25.0   192.168.56.81   <none>        CentOS Linux 7 (Core)   3.10.0-1160.76.1.el7.x86_64   containerd://1.6.8
+```sh
+NAME                   STATUS   ROLES           AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                KERNEL-VERSION                CONTAINER-RUNTIME
+kmaster1.example.com   Ready    control-plane   34m     v1.24.0   192.168.56.51   <none>        CentOS Linux 7 (Core)   3.10.0-1160.80.1.el7.x86_64   containerd://1.6.15
+kworker1.example.com   Ready    <none>          4m53s   v1.24.0   192.168.56.81   <none>        CentOS Linux 7 (Core)   3.10.0-1160.80.1.el7.x86_64   containerd://1.6.15
 ```
 
 Get the component status (cs)
@@ -224,6 +228,19 @@ $ kubectl cluster-info
 $ kubectl get nodes
 ```
 
+### Run Kubectl locally
+
+To run the `kubectl` utility locally install the kubectl and copy the `.kube` directory from the Master node
+
+```sh
+$ scp -r vagrant@192.168.56.51:/home/vagrant/.kube /home/ghost016/.kube
+$ kubectl get nodes
+
+NAME                   STATUS   ROLES           AGE     VERSION
+kmaster1.example.com   Ready    control-plane   37m     v1.24.0
+kworker1.example.com   Ready    <none>          7m18s   v1.24.0
+```
+
 ### Testing
 
 Test deploying `nginx` in the k8s cluster
@@ -241,7 +258,13 @@ nginx        NodePort    10.96.174.96   <none>        80:30000/TCP   4s
 
 To browse the `nginx` Web page, use `http://master1.example.com:30000/`
 
-### K8s Dashboard UI
+### Kubernetes Dashboard UI
+
+Create the `kubernetes-dashboard` namespace to deploy the dashboard UI.
+
+```sh
+[vagrant@master1 ~]$ kubectl create namespace kubernetes-dashboard
+```
 
 Download the `recommended.yaml` and add the port for the NodePort
 
@@ -252,6 +275,10 @@ $ wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/
 $ vi recommended.yaml
 
 ---
+...
+...
+...
+
 kind: Service
 apiVersion: v1
 metadata:
@@ -269,10 +296,11 @@ spec:
     k8s-app: kubernetes-dashboard
 ```
 
-Deploy the control panel
+Deploy `recommended.yaml`
 
 ```sh
-$ kubectl create -f dashboard-ui/recommended.yaml
+$ kubectl create -f recommended.yaml
+
 namespace/kubernetes-dashboard created
 serviceaccount/kubernetes-dashboard created
 service/kubernetes-dashboard created
@@ -291,26 +319,26 @@ deployment.apps/dashboard-metrics-scraper created
 # check the status
 $ kubectl get all -n kubernetes-dashboard
 NAME                                            READY   STATUS    RESTARTS   AGE
-pod/dashboard-metrics-scraper-8c47d4b5d-p569n   1/1     Running   0          43s
-pod/kubernetes-dashboard-6c75475678-7w6sm       1/1     Running   0          43s
+pod/dashboard-metrics-scraper-8c47d4b5d-fnpn6   1/1     Running   0          56s
+pod/kubernetes-dashboard-6c75475678-zphf2       1/1     Running   0          56s
 
-NAME                                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)         AGE
-service/dashboard-metrics-scraper   ClusterIP   10.110.163.77    <none>        8000/TCP        43s
-service/kubernetes-dashboard        NodePort    10.100.101.238   <none>        443:30001/TCP   43s
+NAME                                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)         AGE
+service/dashboard-metrics-scraper   ClusterIP   10.100.75.24   <none>        8000/TCP        56s
+service/kubernetes-dashboard        NodePort    10.111.58.70   <none>        443:30001/TCP   57s
 
 NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/dashboard-metrics-scraper   1/1     1            1           43s
-deployment.apps/kubernetes-dashboard        1/1     1            1           43s
+deployment.apps/dashboard-metrics-scraper   1/1     1            1           56s
+deployment.apps/kubernetes-dashboard        1/1     1            1           56s
 
 NAME                                                  DESIRED   CURRENT   READY   AGE
-replicaset.apps/dashboard-metrics-scraper-8c47d4b5d   1         1         1       43s
-replicaset.apps/kubernetes-dashboard-6c75475678       1         1         1       43s
+replicaset.apps/dashboard-metrics-scraper-8c47d4b5d   1         1         1       56s
+replicaset.apps/kubernetes-dashboard-6c75475678       1         1         1       56s
 
 # get the kubernetes-dashboard service and we can see the kubernetes-dashboard service type is NodePort
 $ kubectl -n kubernetes-dashboard get svc
-NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)         AGE
-dashboard-metrics-scraper   ClusterIP   10.110.163.77    <none>        8000/TCP        18m
-kubernetes-dashboard        NodePort    10.100.101.238   <none>        443:30001/TCP   18m
+NAME                        TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)         AGE
+dashboard-metrics-scraper   ClusterIP   10.100.75.24   <none>        8000/TCP        82s
+kubernetes-dashboard        NodePort    10.111.58.70   <none>        443:30001/TCP   83s
 
 # check the kubernetes-dashboard service
 $ kubectl -n kubernetes-dashboard describe svc kubernetes-dashboard
@@ -322,12 +350,12 @@ Selector:                 k8s-app=kubernetes-dashboard
 Type:                     NodePort
 IP Family Policy:         SingleStack
 IP Families:              IPv4
-IP:                       10.100.101.238
-IPs:                      10.100.101.238
+IP:                       10.111.58.70
+IPs:                      10.111.58.70
 Port:                     <unset>  443/TCP
 TargetPort:               8443/TCP
 NodePort:                 <unset>  30001/TCP
-Endpoints:                192.168.102.144:8443
+Endpoints:                192.168.33.194:8443
 Session Affinity:         None
 External Traffic Policy:  Cluster
 Events:                   <none>
@@ -336,7 +364,7 @@ Events:                   <none>
 Deploy ServiceAccount for Admin account with ClusterRoleBinding
 
 ```sh
-$ kubectl create -f dashboard-ui/sa_cluster_admin.yaml
+$ kubectl create -f sa_cluster_admin.yaml
 
 # check the service acccount
 $ kubectl get sa -n kubernetes-dashboard
@@ -357,7 +385,7 @@ kubernetes-dashboard-key-holder   Opaque                                2      4
 Deploy metrics for the Kubernetes dashboard
 
 ```sh
-$ kubectl create -f dashboard-ui/components.yaml
+$ kubectl create -f components.yaml
 ```
 
 Get the token to login to the dashboard UI
@@ -366,12 +394,11 @@ Get the token to login to the dashboard UI
 $ kubectl describe secret admin-user-secret -n kubernetes-dashboard
 ```
 
-Access the dashboard UI using `https://worker1.example.com:30001/` and put the token found for the `admin-user-secret`
+Access the dashboard UI using `https://192.168.56.51:30001/` and put the token found for the `admin-user-secret`
 
-![UI Dashboard](./images/token-ui-dashboard.png?raw=true "UI Dashboard")
-<p align = "center"> UI Dashboard </p>
+![UI Dashboard](./images/ui-dashboard.png?raw=true "UI Dashboard") <p align = "center"> UI Dashboard </p>
 
-### Restart K8s cluster
+### Restart Kubernetes cluster
 
 Stopping the nodes
 
