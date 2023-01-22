@@ -256,7 +256,7 @@ kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP        14m
 nginx        NodePort    10.96.174.96   <none>        80:30000/TCP   4s
 ```
 
-To browse the `nginx` Web page, use `http://master1.example.com:30000/`
+To browse the `nginx` Web page, use `http://kmaster1.example.com:30000/`
 
 ### Kubernetes Dashboard UI
 
