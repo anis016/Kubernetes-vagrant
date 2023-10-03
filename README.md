@@ -398,7 +398,7 @@ Access the dashboard UI using `https://192.168.56.51:30001/` and put the token f
 
 ![UI Dashboard](./images/ui-dashboard.png?raw=true "UI Dashboard") <p align = "center"> UI Dashboard </p>
 
-### Restart Kubernetes cluster
+### Restart the Kubernetes cluster
 
 Stopping the nodes
 
@@ -407,8 +407,8 @@ Stopping the nodes
 
 Starting the nodes
 
-1. Stop the Master nodes
-2. Stop the Worker nodes
+1. Start the Master nodes
+2. Start the Worker nodes
 
 Check that the cluster has started properly
 
@@ -425,11 +425,11 @@ Read more:
 
 ## Learning Goal
 
-* Essential knowledge on k8s (deployments, services, volumes, claims, service accounts, secrets, helm charts).
+* Essential knowledge of k8s (deployments, services, volumes, claims, service accounts, secrets, helm charts).
 * Deploy different cloud-native apps securely on k8s as the underlying platform.
 * Deploy and secure apps using Microservices Mesh technologies (Istio). 
 * Authentication
-  * For human users, OpenID Connect (jwt tokens)
+  * For human users, OpenID Connect (JWT tokens)
   * For services, mutual TLS using certificates 
 * Authorization
   * RBAC approach
